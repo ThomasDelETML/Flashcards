@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcards</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>Flashcards</h1>
+    <p>Apprenez avec des cartes interactives</p>
+  </header>
+
+  <section class="flashcards-container">
+    <div class="flashcard">
+      <div class="front">
+        <p>Question 1</p>
+      </div>
+      <div class="back">
+        <p>Réponse 1</p>
+      </div>
+    </div>
+
+    <div class="flashcard">
+      <div class="front">
+        <p>Question 2</p>
+      </div>
+      <div class="back">
+        <p>Réponse 2</p>
+      </div>
+    </div>
+
+    <div class="flashcard">
+      <div class="front">
+        <p>Question 3</p>
+      </div>
+      <div class="back">
+        <p>Réponse 3</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Flashcards. Tous droits réservés.</p>
+  </footer>
+
+</body>
+</html>
