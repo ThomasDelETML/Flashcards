@@ -16,17 +16,26 @@
         <nav>
             <ul>
                 <li><a href="{{ route('flashcards') }}">Flashcards</a></li>
-                <li><a href="{{ route('login') }}">Login</a></li>
+                <li><a href="{{ route('home') }}">Acceuil</a></li>
                 <li><a href="{{ route('login') }}">Déconnexion</a></li>
-            </ul>
         </nav>
     </header>
 
     <main>
-        <section class="hero">
-            <h1>Apprenez facilement avec nos flashcards</h1>
-            <p>Une méthode efficace pour mémoriser rapidement.</p>
-            <a href="#" class="btn">Commencer</a>
+        <section class="login-form">
+            <h2>Connexion</h2>
+            <form action="{{ route('login') }}" method="POST">
+                @csrf
+                <div class="form-group">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn">Se connecter</button>
+            </form>
         </section>
     </main>
 
