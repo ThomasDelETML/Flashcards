@@ -8,23 +8,22 @@
 */
 
 import router from '@adonisjs/core/services/router'
+import AuthController from '#controllers/auth_controller'
+import { middleware } from './kernel.js'
 
-// router.on('/').render('pages/home')
+router.on('/').render('pages/home').as('home').use(middleware.auth())
 
+router.on('/login').render('pages/login').as('login')
+
+router.on('/register').render('pages/register').as('register')
+
+router.post('/register', [AuthController, 'create']).as('user.create')
+
+// Route permettant de se connecter
 router
-  .get('/', async ({ view }) => {
-    return view.render('pages/home')
-  })
-  .as('home')
+  .post('/login', [AuthController, 'handleLogin'])
+  .as('auth.handleLogin')
+  .use(middleware.guest())
 
-router
-  .get('/flashcards', async ({ view }) => {
-    return view.render('pages/flashcards')
-  })
-  .as('flashcards')
-
-router
-  .get('/login', async ({ view }) => {
-    return view.render('pages/login')
-  })
-  .as('login')
+// Route permettant de se déconnecter
+router.post('/logout', [AuthController, 'handleLogout']).as('auth.handleLogout')
