@@ -11,6 +11,7 @@ import router from '@adonisjs/core/services/router'
 import AuthController from '#controllers/auth_controller'
 import { middleware } from './kernel.js'
 
+// Route permettant d'accéder à la page d'accueil
 router.on('/').render('pages/home').as('home').use(middleware.auth())
 
 router.on('/flashcards').render('pages/flashcards').as('flashcards').use(middleware.auth())
