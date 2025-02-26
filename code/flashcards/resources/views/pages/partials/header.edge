@@ -1,22 +1,23 @@
+@eval(await auth.check())
 <header>
   <div class="container-header">
     <div class="titre-header">
       <h1>
-        Surnom des enseignants
+        Flashcards
       </h1>
     </div>
     <div class="login-container">
-      @if(isAuthenticated)
+      @if(auth.isAuthenticated)
         {{ auth.user.username }} ({{ auth.user.isAdmin  ? 'admin' : 'user' }})
-        <form action="{{ route('auth.handleLogout') }}" method="post">
+        <form action="#" method="post">
           {{ csrfField() }}
-          <button type="submit" class="btn btn-logout">Se déconnecter</button>
+        <button type="submit" class="btn btn-logout">Se déconnecter</button>
         </form>
       @else
         <form action="{{ route('auth.handleLogin') }}" method="post">
           {{ csrfField() }}
-          @!component('components/input', { name: 'username', label: "Nom d'utilisateur"})
-          @!component('components/input', { name: 'password', label: 'Mot de passe', type: 'password'})
+          <input name='username' label='Nom Utilisateur'/>
+          <input type='password' name='password' label='Mot de Passe'>
           <button type="submit" class="btn btn-login">Se connecter</button>
         </form>
       @endif
@@ -24,8 +25,6 @@
   </div>
   <nav>
     <a href="{{ route('home') }}">Accueil</a>&nbsp;
-    @if(isAuthenticated)
-      <a href="{{ route('teacher.create') }}">Ajouter un enseignant</a>
-    @endif
+    <a href="{{ route('user.create') }}">Ajouter un user</a>
   </nav>
 </header>

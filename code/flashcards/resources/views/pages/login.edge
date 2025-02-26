@@ -7,25 +7,42 @@
     @vite(['resources/public/css/style.css'])
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <a href="{{ route('home') }}">
-                <img src="{{ asset('resources/images/Logo.png') }}" alt="Logo">
-            </a>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="{{ route('flashcards') }}">Flashcards</a></li>
-                <li><a href="{{ route('home') }}">Acceuil</a></li>
-                <li><a href="{{ route('login') }}">Déconnexion</a></li>
-        </nav>
-    </header>
+    @eval(await auth.check())
+<header>
+  <div class="container-header">
+    <div class="titre-header">
+      <h1>
+        Flashcards
+      </h1>
+    </div>
+    <div class="login-container">
+      @if(auth.isAuthenticated)
+        {{ auth.user.username }} ({{ auth.user.isAdmin  ? 'admin' : 'user' }})
+        <form action="#" method="post">
+          {{ csrfField() }}
+        <button type="submit" class="btn btn-logout">Se déconnecter</button>
+        </form>
+      @else
+        <form action="{{ route('auth.handleLogin') }}" method="post">
+          {{ csrfField() }}
+          @!component('components/input', { name: 'username', label: "Nom d'utilisateur"})
+          @!component('components/input', { name: 'password', label: 'Mot de passe', type: 'password'})
+          <button type="submit" class="btn btn-login">Se connecter</button>
+        </form>
+      @endif
+    </div>
+  </div>
+  <nav>
+    <a href="{{ route('home') }}">Accueil</a>&nbsp;
+    <a href="{{ route('user.create') }}">Ajouter un user</a>
+  </nav>
+</header>
 
     <main>
         <section class="login-form">
             <h2>Connexion</h2>
             <form action="{{ route('login') }}" method="POST">
-                @csrf
+                {{ csrfField() }}
                 <div class="form-group">
                     <label for="username">Nom d'utilisateur</label>
                     <input type="text" id="username" name="username" required>
