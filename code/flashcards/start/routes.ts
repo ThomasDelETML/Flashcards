@@ -13,6 +13,8 @@ import { middleware } from './kernel.js'
 
 router.on('/').render('pages/home').as('home').use(middleware.auth())
 
+router.on('/flashcards').render('pages/flashcards').as('flashcards').use(middleware.auth())
+
 router.on('/login').render('pages/login').as('login')
 
 router.on('/register').render('pages/register').as('register')
