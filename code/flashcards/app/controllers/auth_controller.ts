@@ -10,20 +10,31 @@ export default class AuthController {
    * Gérer la connexion d'un utilisateur
    */
   async handleLogin({ request, auth, session, response }: HttpContext) {
-    // Récupère les données validées
-    const { username, password } = await request.validateUsing(loginUserValidator)
+    console.log('🔍 Données reçues :', request.all()) // Vérifie les données brutes
 
-    // Récupère l'utilisateur correspondant aux données saisies par l'utilisateur
-    const user = await User.verifyCredentials(username, password)
+    try {
+      // Récupère les données validées
+      const { username, password } = await request.validateUsing(loginUserValidator)
+      console.log('✅ Données validées :', { username, password })
 
-    // Utilise le guard 'web' pour connecter l'utilisateur -> Voir le fichier config/auth.ts
-    await auth.use('web').login(user)
+      // Si password est undefined -> erreur
+      if (!password) {
+        session.flash('error', 'Le mot de passe est requis')
+        return response.redirect().back()
+      }
 
-    // Affiche un msg à l'utilsateur
-    session.flash('success', "L'utilisateur s'est connecté avec succès")
+      // Vérification des identifiants
+      const user = await User.verifyCredentials(username, password)
 
-    // Redirige vers la route ayant pour nom 'home'
-    return response.redirect().toRoute('home')
+      // Connexion
+      await auth.use('web').login(user)
+      session.flash('success', "L'utilisateur s'est connecté avec succès")
+      return response.redirect().toRoute('home')
+    } catch (error) {
+      console.error('❌ Erreur :', error)
+      session.flash('error', 'Identifiants invalides ou erreur serveur.')
+      return response.redirect().back()
+    }
   }
 
   /**
