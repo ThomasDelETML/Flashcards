@@ -10,14 +10,9 @@ Flashcards est une application permettant d'apprendre facilement avec des cartes
 
 Avant d'installer l'environnement, assurez-vous que vous avez les logiciels suivants installés :
 
-- **Node**  
-  Prenez la version v20.11.0 ou supérieur.
-
-- **NPM**
-  Prenez la version 10.2.4 ou supérieur.
-
-- **Git**  
-  Si vous ne l'avez pas déjà, vous pouvez télécharger Git à partir de [Git officiel](https://git-scm.com/).
+- **Node.js** (v20.11.0 ou supérieur)
+- **NPM** (v10.2.4 ou supérieur)
+- **Git** (téléchargeable depuis [Git officiel](https://git-scm.com/))
 
 ## Installation
 
@@ -32,7 +27,7 @@ Avant d'installer l'environnement, assurez-vous que vous avez les logiciels suiv
    Naviguez dans le répertoire du projet cloné :
 
    ```bash
-   cd .\flashcards\code\flashcards\
+   cd flashcards/code/flashcards
    ```
 
 3. **Installer les dépendances**  
@@ -41,6 +36,8 @@ Avant d'installer l'environnement, assurez-vous que vous avez les logiciels suiv
    ```bash
    npm install
    ```
+   
+   **Si une erreur survient**, assurez-vous que vous avez bien la version correcte de Node.js et NPM.
 
 4. **Configuration de l'environnement**  
    Copiez le fichier `.env.example` et renommez-le en `.env` :
@@ -49,25 +46,35 @@ Avant d'installer l'environnement, assurez-vous que vous avez les logiciels suiv
    cp .env.example .env
    ```
 
-   Ensuite, ajustez les configurations dans le fichier `.env` si nécessaire (par exemple, les paramètres de base de données).
+   Ensuite, ouvrez le fichier `.env` et configurez les paramètres suivants :
 
-5. **Generer la clé**  
-   Pour generer la clé, exécutez la commande suivante :
+   - Base de données (nom, utilisateur, mot de passe)
+   - URL de l'application si différente de `http://localhost:3333`
+
+5. **Générer la clé de l'application**  
+   AdonisJS utilise une clé secrète pour le chiffrement. Générez cette clé en utilisant la commande suivante :
 
    ```bash
    node ace generate:key
    ```
 
-   Cela va crée la clé.
+   Cette commande va générer une clé et l'ajouter automatiquement dans le fichier `.env`.
 
-6. **Lancer l'application**  
-   Pour démarrer le serveur en mode développement, exécutez la commande suivante :
+6. **Exécuter les migrations de la base de données**  
+   Si l'application utilise une base de données, exécutez cette commande pour créer les tables :
+
+   ```bash
+   node ace migration:run
+   ```
+
+7. **Lancer l'application**  
+   Démarrez le serveur en mode développement :
 
    ```bash
    npm run dev
    ```
 
-   Cela démarrera le serveur à l'adresse `http://localhost:3333`.
+   Si tout s'est bien passé, vous devriez voir l'application accessible sur `http://localhost:3333`.
 
 ## Utilisation
 
@@ -80,3 +87,12 @@ Après avoir lancé le serveur, ouvrez votre navigateur et allez à `http://loca
 3. Commitez vos changements (`git commit -am 'Ajout de la fonctionnalité'`).
 4. Poussez à votre branche (`git push origin feature/nom-fonctionnalité`).
 5. Ouvrez une pull request.
+
+## Problèmes et solutions
+
+- **Erreur lors de `npm install`** : Assurez-vous d'avoir les versions requises de Node.js et NPM.
+- **Problème de connexion à la base de données** : Vérifiez les paramètres dans `.env` et que votre base de données est bien en cours d'exécution.
+- **Erreur `E_MISSING_APP_KEY`** : La clé de l'application n'a pas été générée. Exécutez `node ace generate:key`.
+
+Si le problème persiste, consultez la documentation officielle d'AdonisJS ou ouvrez une issue sur le repo GitHub du projet.
+
