@@ -10,29 +10,30 @@ export default class AuthController {
    * Gérer la connexion d'un utilisateur
    */
   async handleLogin({ request, auth, session, response }: HttpContext) {
-    console.log('🔍 Données reçues :', request.all()) // Vérifie les données brutes
+    console.log('🔍 Données reçues :', request.all()) // Vérifie ce qui arrive
 
     try {
-      // Récupère les données validées
-      const { username, password } = await request.validateUsing(loginUserValidator)
-      console.log('✅ Données validées :', { username, password })
+      // ✅ Vérification des données avec VineJS
+      const payload = await request.validateUsing(loginUserValidator)
+      console.log('✅ Données validées :', payload)
 
-      // Si password est undefined -> erreur
-      if (!password) {
-        session.flash('error', 'Le mot de passe est requis')
+      // Vérifie que `password` est bien récupéré après validation
+      if (!payload.password) {
+        session.flash('error', 'Le mot de passe est manquant après validation.')
         return response.redirect().back()
       }
 
-      // Vérification des identifiants
-      const user = await User.verifyCredentials(username, password)
+      // Vérifie l'utilisateur avec AdonisJS
+      const user = await User.verifyCredentials(payload.username, payload.password)
 
       // Connexion
       await auth.use('web').login(user)
-      session.flash('success', "L'utilisateur s'est connecté avec succès")
+      session.flash('success', 'Connexion réussie !')
       return response.redirect().toRoute('home')
     } catch (error) {
-      console.error('❌ Erreur :', error)
-      session.flash('error', 'Identifiants invalides ou erreur serveur.')
+      console.error("❌ Erreur de validation ou d'authentification :", error)
+
+      session.flash('error', 'Identifiants invalides ou erreur de validation.')
       return response.redirect().back()
     }
   }
