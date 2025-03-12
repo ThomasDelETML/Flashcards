@@ -27,7 +27,7 @@ Avant d'installer l'environnement, assurez-vous que vous avez les logiciels suiv
    Naviguez dans le répertoire du projet cloné :
 
    ```bash
-   cd flashcards/code/flashcards
+   cd flashcards/code/
    ```
 
 3. **Installer les dépendances**  
