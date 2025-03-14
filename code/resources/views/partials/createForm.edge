@@ -1,0 +1,10 @@
+{{ csrfField() }}
+<div class="field">
+  @!component('components/input', { name: 'name', label: 'Nom', value: old('name') || (deck ? deck.name : '') })
+</div>
+
+<div class="field">
+  @!component('components/input', { name: 'description', label: 'description', value: old('description') || ( deck ? deck.description : '') })
+</div>
+
+<button type="submit" class="create-deck-link mt-6">Enregistrer</button>

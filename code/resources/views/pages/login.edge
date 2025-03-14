@@ -1,0 +1,53 @@
+
+@component('components/layout.edge', { title: 'login' })
+  <section>
+    <div class="login-card">
+      <h2 class="title">
+        Se connecter
+      </h2>
+      @if(session.get('error'))
+        <div class="alert alert-danger">
+          {{ session.get('error') }}
+        </div>
+      @endif
+      <form action="{{ route('postlogin') }}" method="POST" id="login">
+        {{ csrfField() }}
+        <input type="email" placeholder="Email" id="email" class="input" name="email" />
+        <input type="password" placeholder="Mot de passe" id="password" class="input" name="password" />
+        <button type="submit" id="submit" style="display: none;" class="submit">connectez-vous</button>
+        <p class="forgot-password">
+          <a href="#">Mot de passe oublié ?</a>
+        </p>
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+            // Récupération des éléments
+            const form = document.getElementById("login");
+            const password = document.getElementById("password");
+            const submitButton = document.getElementById("submit");
+            const inputs = form.querySelectorAll("input");
+            // Fonction de vérification des conditions
+            function checkPasswords() {
+              let allFilled = true;
+              inputs.forEach(input => {
+                if (!input.value) {
+                  allFilled = false;
+                }
+              });
+              if (allFilled === true) {
+                submitButton.classList.add("visible"); // Afficher le bouton
+                submitButton.style.display = "inline";
+              } else {
+                submitButton.classList.remove("visible"); // Cacher le bouton
+              }
+            }
+            // Écouteurs d'événements sur les champs de mot de passe
+            password.addEventListener("input", checkPasswords);
+            // Vérification initiale pour afficher ou masquer le bouton
+            checkPasswords();
+          });
+        </script>
+      </form>
+      <a href="{{ route('showregister') }}">s'inscrire</a>
+    </div>
+  </section>
+@endcomponent

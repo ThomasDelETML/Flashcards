@@ -1,69 +1,56 @@
 /*
 |--------------------------------------------------------------------------
-| Le fichier des routes
+| Routes file
 |--------------------------------------------------------------------------
 |
-| Le fichier des routes a pour but de définir toutes les routes HTTP.
+| The routes file is used for defining the HTTP routes.
 |
 */
 
-import AuthController from '#controllers/auth_controller'
-import TeachersController from '#controllers/teachers_controller'
 import router from '@adonisjs/core/services/router'
+import AuthController from '../app/controllers/auth_controllers.js'
+import UsersController from '#controllers/users_controller'
+import AccueilsController from '#controllers/accueils_controller'
 import { middleware } from './kernel.js'
+import CartesController from '../app/controllers/cartes_controller.js'
 
-// Route permettant d'accéder à la liste des enseignants (homepage)
-router.get('/', [TeachersController, 'index']).as('home')
+router.get('/accueil', [AccueilsController, 'accueil']).as('accueil').use(middleware.auth())
 
-// Route permettant de voir les détails d'un enseignant
+router.get('/createDeck', [AccueilsController, 'create']).as('showcreateDeck')
+
+router.get('/', [AuthController, 'redirectToLogin'])
+
+router.get('/login', [AuthController, 'login']).as('getlogin')
+
+router.post('/login', [UsersController, 'login']).as('postlogin')
+
+router.get('/register', [AuthController, 'register']).as('showregister')
+
+router.post('/register', [UsersController, 'register']).as('postregister')
+
+router.get('/users', [UsersController, 'getUsers']).use(middleware.auth())
+
 router
-  .get('/teacher/:id/show', [TeachersController, 'show'])
-  .as('teacher.show')
+  .post('/accueil/store', [AccueilsController, 'store'])
+  .as('accueil.store')
   .use(middleware.auth())
 
-// Route permettant d'afficher le formulaire permettant l'ajout d'un enseignant
-router
-  .get('/teacher/add', [TeachersController, 'create'])
-  .as('teacher.create')
-  .use(middleware.auth())
-  .use(middleware.ensureAdmin())
+router.get('/deck/:id', [AccueilsController, 'deck']).use(middleware.auth())
 
-// Route permettant l'ajout de l'enseignant
 router
-  .post('/teacher/add', [TeachersController, 'store'])
-  .as('teacher.store')
+  .get('/deck/:id/createCarte', [CartesController, 'create'])
   .use(middleware.auth())
-  .use(middleware.ensureAdmin())
+  .as('deck.createCarte')
 
-// Route permettant d'afficher le formulaire permettant la mise à jour d'un enseignant
+router.post('/deck/:id/store', [CartesController, 'store']).use(middleware.auth()).as('deck.store')
 router
-  .get('/teacher/:id/edit', [TeachersController, 'edit'])
-  .as('teacher.edit')
+  .get('/deck/:id/delete', [AccueilsController, 'delete'])
   .use(middleware.auth())
-  .use(middleware.ensureAdmin())
+  .as('deck.delete')
 
-// Route permettant la modification de l'enseignant
-router
-  .post('/teacher/:id/update', [TeachersController, 'update'])
-  .as('teacher.update')
-  .use(middleware.auth())
-  .use(middleware.ensureAdmin())
+router.get('/deck/:id/edit', [AccueilsController, 'edit']).as('deck.edit')
+router.post('/deck/:id/update', [AccueilsController, 'update']).as('deck.update')
 
-// Route permettant de supprimer un enseignant
-router
-  .get('/teacher/:id/destroy', [TeachersController, 'destroy'])
-  .as('teacher.destroy')
-  .use(middleware.auth())
-  .use(middleware.ensureAdmin())
+router.get('/cartes/create', [CartesController, 'create']).as('cartes.create')
 
-// Route permettant de se connecter
-router
-  .post('/login', [AuthController, 'handleLogin'])
-  .as('auth.handleLogin')
-  .use(middleware.guest())
-
-// Route permettant de se déconnecter
-router
-  .post('/logout', [AuthController, 'handleLogout'])
-  .as('auth.handleLogout')
-  .use(middleware.auth())
+router.post('/logout', [AuthController, 'handleLogout']).as('auth.handleLogout')

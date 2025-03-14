@@ -1,0 +1,10 @@
+{{ csrfField() }}
+<div class="field">
+  @!component('components/input', { name: 'question', label: 'question', value: old('question') || (carte ? carte.question : '') })
+</div>
+
+<div class="field">
+  @!component('components/input', { name: 'response', label: 'response', value: old('response') || ( carte ? carte.response : '') })
+</div>
+
+<button type="submit">Enregistrer</button>

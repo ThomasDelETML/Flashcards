@@ -1,50 +1,36 @@
-@component('components/layout', { title: 'Accueil' })
-  <h3>
-    Liste des enseignants
-  </h3>
-  <form action="#" method="post">
-    <table>
-      <thead>
-        <tr>
-          <th>
-            Nom
-          </th>
-          <th>
-            Surnom
-          </th>
-          <th>
-            Options
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        @each ((teacher, index) in teachers)
-          <tr>
-            <td>
-              {{ teacher.lastname }} {{ teacher.firstname }}
-            </td>
-            <td>
-              {{ teacher.nickname }}
-            </td>
-            <td class="containerOptions">
-              @if(isAuthenticated)
-                <a href="{{ route('teacher.edit', {id: teacher.id}) }}">
-                  <img height="20em" src="/img/edit.png" alt="edit" />
-                </a>
-                <a
-                  onClick="return confirm(`Voulez-vous vraiment supprimer l'enseignant {{ teacher.lastname }} {{ teacher.firstname }} ?`)"
-                  href="{{ route('teacher.destroy', {id: teacher.id}) }}"
-                >
-                  <img height="20em" src="/img/delete.png" alt="delete" />
-                </a>
-                <a href="{{ route('teacher.show', {id: teacher.id}) }}">
-                  <img height="20em" src="/img/detail.png" alt="detail" />
-                </a>
-              @endif
-            </td>
-          </tr>
-        @end
-      </tbody>
-    </table>
-  </form>
+@component('components/layout.edge', { title: 'Accueil' })
+
+  <section class="flex-grow container mx-auto text-center py-10">
+    <h2 class="text-4xl font-bold text-blue-600">
+      Bienvenue sur Flash Cards
+    </h2>
+    <p class="mt-4 text-lg text-gray-700">
+      Apprenez efficacement avec des cartes mémoires interactives.
+    </p>
+
+    <h1>
+      Mes Decks
+    </h1>
+    <div class="deck-container" >
+      @each ((deck) in decks)
+<a href="/deck/{{deck.id}}" class="deck">
+        <div  >
+        
+          <td>
+            {{ deck.name }}
+          </td>          <br />
+          <td>
+            {{ deck.description }}
+          </td>
+
+        </div>
+        </a>
+      @end
+      
+    </div>
+    <a href="{{ route('showcreateDeck')}}" class="create-deck-link mt-6">Créer un Deck</a>
+  </div>
+</section>
+
 @endcomponent
+

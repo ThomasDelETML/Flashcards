@@ -1,5 +1,5 @@
 {
-  "name": "app-teachers-adonisjs",
+  "name": "flashcards",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -59,9 +59,12 @@
     "@adonisjs/static": "^1.1.1",
     "@adonisjs/vite": "^4.0.0",
     "@vinejs/vine": "^3.0.0",
+    "alpinejs": "^3.14.8",
+    "dumper": "^1.0.12",
     "edge.js": "^6.2.0",
     "luxon": "^3.5.0",
     "mysql2": "^3.12.0",
+    "peek-readable": "5.3.1",
     "reflect-metadata": "^0.2.2"
   },
   "hotHook": {

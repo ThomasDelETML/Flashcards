@@ -1,0 +1,33 @@
+@component('components/layout', { title: title })
+  <h3>
+    {{ title }}
+  </h3>
+  <a href="{{route('accueil')}}">< retour</a>
+  <div class="deck-container" >
+
+    <button onclick="confirmDeletion()" class="create-deck-link mt-6">Supprimer</button>
+    <a href="{{route('deck.edit', {id: deck.id})}}"class="create-deck-link mt-6">modifier</a>
+
+    
+          <td>
+            {{ deck.name }}
+          </td>          <br />
+          <td>
+            {{ deck.description }}
+          </td>
+
+     
+      
+    </div>
+    
+    <a href="{{ route('deck.createCarte', { id: deck.id }) }}" class="create-deck-link mt-6">Créer une carte</a>
+  </div>
+  <script>
+    function confirmDeletion() {
+        if (confirm("Voulez-vous vraiment supprimer ce deck ?")) {
+            window.location.href = "{{route('deck.delete', {id: deck.id})}}"; // Remplace "/delete-deck" par ta vraie route
+        }
+    }
+  </script>
+
+@endcomponent

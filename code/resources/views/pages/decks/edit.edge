@@ -1,0 +1,9 @@
+@component('components/layout', { title: title })
+  <h3>
+    {{ title }}
+  </h3>
+  <form action="{{ route('deck.update',{id: deck.id}) }}" method="post">
+    @include('partials/createForm')
+  </form>
+  <a href="{{ route('accueil') }}" class="create-deck-link mt-6">Abandonner</a>
+@endcomponent

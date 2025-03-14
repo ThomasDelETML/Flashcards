@@ -1,0 +1,56 @@
+@component('components/layout.edge', { title: 'Register' })
+  <section>
+    <h2>
+      Créer un compte
+    </h2>
+    @if(session.get('error'))
+      <div class="alert alert-danger">
+        {{ session.get('error') }}
+      </div>
+    @endif
+    <form action="{{ route('postregister') }}" method="POST" id="register">
+      {{ csrfField() }}
+      <input type="text" name="full_name" placeholder="Nom d'utilisateur" id="full_name" required />      <br />
+
+      <input type="email" name="email" placeholder="Email" id="email" required />      <br />
+
+      <input type="password" name="password" id="password" placeholder="Mot de passe" required />      <br />
+      <input type="password" id="confirmPassword" placeholder="Confirmer le mot de passe" required />      <br />
+      <button type="submit" id="submit" style="display: none;" class="submit">inscription ready !</button>
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          // Récupération des éléments
+          const form = document.getElementById("register");
+          const password = document.getElementById("password");
+          const confirmPassword = document.getElementById("confirmPassword");
+          const submitButton = document.getElementById("submit");
+          const inputs = form.querySelectorAll("input");
+          // Fonction de vérification des conditions
+          function checkPasswords() {
+            let allFilled = true;
+            const passwordValue = password.value;
+            const confirmPasswordValue = confirmPassword.value;
+            // Vérifie si les deux champs sont identiques et ont au moins 8 caractères
+            inputs.forEach(input => {
+              if (!input.value) {
+                allFilled = false;
+              }
+            });
+            if (passwordValue === confirmPasswordValue && passwordValue.length >= 8 && allFilled === true) {
+              submitButton.classList.add("visible"); // Afficher le bouton
+              submitButton.style.display = "inline";
+            } else {
+              submitButton.classList.remove("visible"); // Cacher le bouton
+            }
+          }
+          // Écouteurs d'événements sur les champs de mot de passe
+          password.addEventListener("input", checkPasswords);
+          confirmPassword.addEventListener("input", checkPasswords);
+          // Vérification initiale pour afficher ou masquer le bouton
+          checkPasswords();
+        });
+      </script>
+    </form>
+
+  </section>
+@endcomponent
