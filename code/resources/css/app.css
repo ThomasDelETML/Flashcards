@@ -41,11 +41,11 @@ header {
 
 /* Main Content */
 @keyframes colorChange {
-  0% { background: rgb(107, 107, 107); }
+  0% { background: rgb(255, 255, 0); }
   25% { background: rgb(50, 150, 200); }
   50% { background: rgb(200, 50, 150); }
   75% { background: rgb(150, 200, 50); }
-  100% { background: rgb(107, 107, 107); }
+  100% { background: rgb(255, 0, 0); }
 }
 
 .container {
@@ -133,7 +133,13 @@ input {
   background-color: #2b2b2b; /* Fond sombre */
   color: #e1e1e1; /* Texte clair */
   transition: all 0.3s ease;
+  width: 90%;
 }
+
+div.field {
+  width: 100%;
+}
+
 .submit {
   padding: 12px 24px;
   border: 2px solid #444;
@@ -303,6 +309,22 @@ a {
     width: 100%;
   }
 }
+
+.button {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #3c0496;
+  color: #ffee00;
+  text-decoration: none;
+  border-radius: 4px;
+}
+.button:hover {
+  background-color: #00ff22;
+  color: #000000;
+}
+
+
+
 
 /*div .login-card {
 /*  display: flex;

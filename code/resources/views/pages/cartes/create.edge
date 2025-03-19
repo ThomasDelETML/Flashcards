@@ -2,7 +2,11 @@
   <h3>
     {{ title }}
   </h3>
-  <form action="{{ route('deck.store',{ id: deckId }) }}" method="post">
+
+  <form action="{{ route('deck.store', { id: deckId ?? '' }) }}" method="post">
+    {{ csrfField() }}
+    <input type="hidden" name="deck_id" value="{{ deckId }}" />
+
     @include('partials/createCard')
   </form>
 @endcomponent
