@@ -14,7 +14,6 @@ export default class Carte extends BaseModel {
   @column()
   declare deck_id: number
 
-  
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

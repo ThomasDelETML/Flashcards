@@ -1,0 +1,28 @@
+@component('components/layout', { title: title })
+  <h3>
+    {{ title }}
+  </h3>
+
+  <form action="{{ route('deck.store', { id: deck.id }) }}" method="post">
+
+    {{ csrfField() }}
+    <div class="field">
+      @!component('components/input', {
+        name: 'question',
+        label: 'question',
+        value: old('question') || (carte ? carte.question : '')
+      })
+    </div>
+
+    <div class="field">
+      @!component('components/input', {
+        name: 'response',
+        label: 'response',
+        value: old('response') || (carte ? carte.response : '')
+      })
+    </div>
+
+    <button class="button" type="submit">Enregistrer</button>
+    <a href="{{ route('accueil') }}" class="button">Abandonner</a>
+  </form>
+@endcomponent

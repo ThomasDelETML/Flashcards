@@ -37,12 +37,8 @@ router
 
 router.get('/deck/:id', [AccueilsController, 'deck']).use(middleware.auth())
 
-router
-  .get('/deck/:id/createCarte', [CartesController, 'create'])
-  .use(middleware.auth())
-  .as('deck.createCarte')
-
 router.post('/deck/:id/store', [CartesController, 'store']).use(middleware.auth()).as('deck.store')
+
 router
   .get('/deck/:id/delete', [AccueilsController, 'delete'])
   .use(middleware.auth())
@@ -51,7 +47,10 @@ router
 router.get('/deck/:id/edit', [AccueilsController, 'edit']).as('deck.edit')
 router.post('/deck/:id/update', [AccueilsController, 'update']).as('deck.update')
 
-router.get('/cartes/create', [CartesController, 'create']).as('card.create')
+router
+  .get('/deck/:id/create', [CartesController, 'create'])
+  .use(middleware.auth())
+  .as('card.create')
 
 router.post('/cartes/store', [CartesController, 'store']).as('card.store').use(middleware.auth())
 
@@ -70,3 +69,8 @@ router
 router.post('/logout', [AuthController, 'handleLogout']).as('auth.handleLogout')
 
 router.get('/cartes', [CartesController, 'index']).as('card.index').use(middleware.auth())
+
+router
+  .get('/deck/:id/cards', [CartesController, 'showDeckCards'])
+  .as('deck.cards')
+  .use(middleware.auth())

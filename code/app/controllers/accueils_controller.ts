@@ -16,9 +16,13 @@ export default class AccueilsController {
   /**
    * Display form to create a new record
    */
-  public async create({ view }: HttpContextContract) {
-    return view.render('pages/decks/create', { title: "ajout d'un nouveau deck" })
+  public async create({ view, params, session, response }: HttpContextContract) {
+    // Passe deckId (ou même le deck complet) à la vue
+    return view.render('pages/decks/create', {
+      title: "Ajout d'une nouvelle carte",
+    })
   }
+
   /**
    * Handle form submission for the create action
    */

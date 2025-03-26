@@ -11,24 +11,24 @@
     <h1>
       Mes Decks
     </h1>
-    <div class="deck-container" >
+    <div class="deck-container">
       @each ((deck) in decks)
-<a href="/deck/{{deck.id}}" class="deck">
-        <div  >
-        
-          <td>
-            {{ deck.name }}
-          </td>          <br />
-          <td>
-            {{ deck.description }}
-          </td>
+        <a href="/deck/{{ deck.id }}" class="deck">
+          <div>
 
-        </div>
+            <td>
+              {{ deck.name }}
+            </td>            <br />
+            <td>
+              {{ deck.description }}
+            </td>
+
+          </div>
         </a>
       @end
       
     </div>
-    <a href="{{ route('showcreateDeck')}}" class="create-deck-link mt-6">Créer un Deck</a>
+    <a href="{{ route('showcreateDeck') }}" class="create-deck-link mt-6">Créer un Deck</a>
   </div>
 </section>
 
