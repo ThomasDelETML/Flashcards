@@ -96,7 +96,30 @@ export default class CartesController {
     })
   }
 
-  public async delete({ params, session, response, view }: HttpContextContract) {}
+  public async delete({ params, session, response }: HttpContextContract) {
+    const cardId = Number(params.id)
+
+    if (isNaN(cardId)) {
+      session.flash({ error: 'ID de la carte invalide.' })
+      return response.redirect().back()
+    }
+
+    const card = await Carte.find(cardId)
+    if (!card) {
+      session.flash({ error: 'Carte introuvable.' })
+      return response.redirect().back()
+    }
+
+    try {
+      await card.delete()
+      session.flash({ success: 'La carte a été supprimée avec succès.' })
+    } catch (err) {
+      console.error(err)
+      session.flash({ error: 'Erreur lors de la suppression de la carte.' })
+    }
+
+    return response.redirect().back()
+  }
 
   public async edit({ params, view }: HttpContextContract) {}
 
