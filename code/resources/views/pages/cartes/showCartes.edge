@@ -1,0 +1,33 @@
+@component('components/layout', { title: title })
+  <h3>
+    {{ title }}
+  </h3>
+  <a href="{{route('accueil')}}">< retour</a>
+  <div class="card-container" >
+
+    <button onclick="confirmDeletion()" class="create-card-link mt-6">Supprimer</button>
+    <a href="{{route('card.edit', {id: card.id})}}" class="create-card-link mt-6">modifier</a>
+
+    
+          <td>
+            {{ card.name }}
+          </td>          <br />
+          <td>
+            {{ card.description }}
+          </td>
+
+     
+      
+    </div>
+    
+    <a href="{{ route('card.create', { id: card.id }) }}" class="create-card-link mt-6">Créer une carte</a>
+  </div>
+  <script>
+    function confirmDeletion() {
+        if (confirm("Voulez-vous vraiment supprimer cette carte ?")) {
+            window.location.href = "{{route('card.delete', {id: card.id})}}"; // Remplace "/delete-card" par ta vraie route
+        }
+    }
+  </script>
+
+@endcomponent

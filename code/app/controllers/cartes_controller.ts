@@ -40,4 +40,8 @@ export default class CartesController {
       return response.redirect().toRoute('accueil')
     }
   }
+  public async index({ view }: HttpContextContract) {
+    const cards = await Card.all()
+    return view.render('pages/cartes/index', { cards })
+  }
 }
