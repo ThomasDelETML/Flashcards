@@ -1,5 +1,6 @@
 @component('components/layout', { title: title })
   <h3>{{ title }}</h3>
+  <a href="{{route('accueil')}}">< retour</a>
   <a href="{{ route('accueil') }}" class="button">Retour à l'accueil</a>
   <a href="{{ route('card.create', { id: deck.id }) }}" class="button">Créer une nouvelle carte</a>
 

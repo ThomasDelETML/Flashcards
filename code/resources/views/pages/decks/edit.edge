@@ -2,6 +2,7 @@
   <h3>
     {{ title }}
   </h3>
+  <a href="{{route('accueil')}}">< retour</a>
   <form action="{{ route('deck.update',{id: deck.id}) }}" method="post">
     @include('partials/createForm')
   </form>

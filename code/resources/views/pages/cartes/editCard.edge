@@ -3,7 +3,7 @@
   <h3>
     {{ title }}
   </h3>
-
+  <a href="{{route('accueil')}}">< retour</a>
   <form action="{{ route('card.update', { id: card.id }) }}" method="post">
     {{ csrfField() }}
     
