@@ -1,6 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { deckValidator } from '#validators/deck'
 import Deck from '#models/deck'
+import Carte from '#models/carte'
 import User from '#models/user'
 export default class AccueilsController {
   /**
@@ -56,7 +57,12 @@ export default class AccueilsController {
       session.flash({ errors: [{ message: 'deck inexistant' }] })
       return response.notFound({ message: 'deck non trouvé' })
     }
-    return view.render('pages/decks/showDeck', { title: `voici le deck ${deck.name}`, deck: deck })
+    const cards = await Carte.query().orderBy('id', 'asc').where('deck_id', deck.id)
+    return view.render('pages/decks/showDeck', {
+      title: `voici le deck ${deck.name}`,
+      deck: deck,
+      cards,
+    })
   }
 
   public async delete({ params, session, response, view }: HttpContextContract) {

@@ -1,9 +1,19 @@
 @component('components/layout', { title: title })
+
   <h3>
     {{ title }}
   </h3>
-  <form action="{{ route('card.update', {id: card.id}) }}" method="post">
-    @include('partials/createForm')
+
+  <form action="{{ route('card.update', { id: card.id }) }}" method="post">
+    {{ csrfField() }}
+    
+    <label for="question">Question :</label>
+    <input type="text" name="question" id="question" value="{{ card.question }}" required />
+
+    <label for="response">Réponse :</label>
+    <input type="text" name="response" id="response" value="{{ card.response }}" required />
+
+    <button type="submit">Enregistrer</button>
   </form>
-  <a href="{{ route('accueil') }}" class="create-card-link mt-6">Abandonner</a>
+
 @endcomponent

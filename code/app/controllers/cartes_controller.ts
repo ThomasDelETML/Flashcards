@@ -121,7 +121,58 @@ export default class CartesController {
     return response.redirect().back()
   }
 
-  public async edit({ params, view }: HttpContextContract) {}
+  public async edit({ params, view, session, response }: HttpContextContract) {
+    const cardId = Number(params.id)
 
-  public async update({ params, request, session, response }: HttpContextContract) {}
+    if (isNaN(cardId)) {
+      session.flash({ error: 'ID de la carte invalide.' })
+      return response.redirect().toRoute('accueil')
+    }
+
+    const card = await Carte.find(cardId)
+    if (!card) {
+      session.flash({ error: 'Carte introuvable.' })
+      return response.redirect().toRoute('accueil')
+    }
+
+    return view.render('pages/cartes/editCard', {
+      title: 'Modifier la carte',
+      card,
+    })
+  }
+
+  public async update({ params, request, session, response }: HttpContextContract) {
+    const cardId = Number(params.id)
+
+    console.log('params:', params)
+    console.log('form:', request.all())
+
+    if (isNaN(cardId)) {
+      session.flash({ error: 'ID de la carte invalide.' })
+      return response.redirect().toRoute('accueil')
+    }
+
+    const card = await Carte.find(cardId)
+    console.log('carte trouvée:', card)
+
+    if (!card) {
+      session.flash({ error: 'Carte introuvable.' })
+      return response.redirect().toRoute('accueil')
+    }
+
+    try {
+      const { question, response: cardResponse } = request.only(['question', 'response'])
+
+      card.question = question
+      card.response = cardResponse
+      await card.save()
+
+      session.flash({ success: 'Carte mise à jour avec succès.' })
+      return response.redirect().toRoute('deck.cards', { id: card.deckId })
+    } catch (err) {
+      console.error(err)
+      session.flash({ error: 'Erreur lors de la mise à jour de la carte.' })
+      return response.redirect().back()
+    }
+  }
 }

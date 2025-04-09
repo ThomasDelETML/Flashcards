@@ -6,18 +6,13 @@
   <div class="card-container" >
 
     <button onclick="confirmDeletion()" class="create-card-link mt-6">Supprimer</button>
-    <a href="{{route('card.edit', {id: card.id})}}" class="create-card-link mt-6">modifier</a>
-
-    
+    <a href="{{ route('card.edit', { id: card.id }) }}" class="create-card-link mt-6">modifier</a>
           <td>
             {{ card.name }}
           </td>          <br />
           <td>
             {{ card.description }}
           </td>
-
-     
-      
     </div>
     
     <a href="{{ route('card.create', { id: card.id }) }}" class="create-card-link mt-6">Créer une carte</a>

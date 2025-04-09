@@ -39,14 +39,14 @@ header {
   color: yellow;
 }
 
-/* Main Content */
-@keyframes colorChange {
+/* Main Content @keyframes colorChange {
   0% { background: rgb(255, 255, 0); }
   25% { background: rgb(50, 150, 200); }
   50% { background: rgb(200, 50, 150); }
   75% { background: rgb(150, 200, 50); }
   100% { background: rgb(255, 0, 0); }
-}
+}*/
+
 
 .container {
   flex: 1;
@@ -54,7 +54,12 @@ header {
   max-width: 1000px;
   margin: 30px auto;
   padding: 25px;
-  animation: colorChange 5s infinite alternate;
+  background-color: rgb(110, 75, 103); /* Couleur de base blanche */
+  transition: background-color 0.3s ease; /* Transition douce pour le changement de couleur */
+}
+
+.container:hover {
+  background-color: purple; /* Couleur violette au survol */
 }
 
 .disconnect {
@@ -284,10 +289,17 @@ p {
     transform 0.3s ease;
   text-align: center;
 }
+
 a {
-  color: rgb(255, 255, 255);
+  color: white; /* Couleur de base blanche */
   text-decoration: none;
+  transition: color 0.3s ease; /* Transition douce pour le changement de couleur */
 }
+
+a:hover {
+  color: purple; /* Couleur violette au survol */
+}
+
 .create-deck-link:hover {
   background-color: #2b6cb0;
   transform: translateY(-5px);
