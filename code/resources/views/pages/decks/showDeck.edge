@@ -7,20 +7,16 @@
 
     <button onclick="confirmDeletion()" class="create-deck-link mt-6">Supprimer</button>
     <a href="{{route('deck.edit', {id: deck.id})}}"class="create-deck-link mt-6">modifier</a>
-
-    
           <td>
             {{ deck.name }}
           </td>          <br />
           <td>
             {{ deck.description }}
           </td>
-
-     
-      
     </div>
     
-    <a href="{{ route('deck.createCarte', { id: deck.id }) }}" class="create-deck-link mt-6">Créer une carte</a>
+    <a href="{{ route('card.create', { id: deck.id }) }}" class="create-deck-link mt-6">Créer une carte</a>
+
   </div>
   <script>
     function confirmDeletion() {
