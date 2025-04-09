@@ -1,54 +1,109 @@
 @component('components/layout', { title: title })
-  <h3>
-    {{ title }}
-  </h3>
+  <h3>{{ title }}</h3>
   <a href="{{route('accueil')}}">< retour</a>
-  <div class="deck-container" >
 
-    <button onclick="confirmDeletion()" class="create-deck-link mt-6">Supprimer</button>
-    <a href="{{route('deck.edit', {id: deck.id})}}"class="create-deck-link mt-6">modifier</a>
-          <td>
-            {{ deck.name }}
-          </td>          <br />
-          <td>
-            {{ deck.description }}
-          </td>
+  <div class="deck-container">
+    <button onclick="confirmDeckDeletion()" class="create-deck-link mt-6">Supprimer</button>
+    <a href="{{route('deck.edit', {id: deck.id})}}" class="create-deck-link mt-6">Modifier</a>
+
+    <div class="deck-info mt-4">
+      <p><strong>Nom :</strong> {{ deck.name }}</p>
+      <p><strong>Description :</strong> {{ deck.description }}</p>
     </div>
-    
+
     <a href="{{ route('card.create', { id: deck.id }) }}" class="create-deck-link mt-6">Créer une carte</a>
-
   </div>
 
-  @each ((card, index) in cards)
-  <div class="card-container" >
-
-    <button onclick="confirmDeletion()" class="create-card-link mt-6">Supprimer</button>
-    <a href="{{ route('card.edit', { id: card.id }) }}" class="create-card-link mt-6">modifier</a>
-          <td>
-            {{ card.name }}
-          </td>          <br />
-          <td>
-            {{ card.description }}
-          </td>
-    </div>
-    
-    <a href="{{ route('card.create', { id: card.id }) }}" class="create-card-link mt-6">Créer une carte</a>
+  <div class="cards-wrapper">
+    @each((card, index) in cards)
+      <div class="card">
+        <div class="card-content">
+          <p><strong>Question :</strong> {{ card.question }}</p>
+          <p><strong>Réponse :</strong> {{ card.response }}</p>
+        </div>
+        <div class="card-actions mt-2">
+          <a href="{{ route('card.edit', { id: card.id }) }}" class="card-btn edit">Modifier</a>
+          <button onclick="confirmCardDeletion({{ card.id }})" class="card-btn delete">Supprimer</button>
+        </div>
+      </div>
+    @end
   </div>
+
   <script>
-    function confirmDeletion() {
-        if (confirm("Voulez-vous vraiment supprimer cette carte ?")) {
-            window.location.href = "{{route('card.delete', {id: card.id})}}"; // Remplace "/delete-card" par ta vraie route
-        }
+    function confirmDeckDeletion() {
+      if (confirm("Voulez-vous vraiment supprimer ce deck ?")) {
+        window.location.href = "{{route('deck.delete', {id: deck.id})}}";
+      }
     }
-  </script>
-  @end
-  
-  <script>
-    function confirmDeletion() {
-        if (confirm("Voulez-vous vraiment supprimer ce deck ?")) {
-            window.location.href = "{{route('deck.delete', {id: deck.id})}}"; // Remplace "/delete-deck" par ta vraie route
-        }
+
+    function confirmCardDeletion(cardId) {
+      if (confirm("Voulez-vous vraiment supprimer cette carte ?")) {
+        window.location.href = `/cartes/${cardId}/delete`; // génération JS correcte
+      }
     }
   </script>
 
+  <style>
+    .deck-container {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f2f2f2;
+    }
+
+    p {
+      color:black
+    }
+
+    footer, p {
+      color: #28a745
+    }
+
+    .cards-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .card {
+      background-color: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      width: 280px;
+    }
+
+    .card-content p {
+      margin: 0.5rem 0;
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+    }
+
+    .card-btn {
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 4px;
+      text-decoration: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    .card-btn.edit {
+      background-color: #28a745;
+    }
+
+    .card-btn.delete {
+      background-color: #dc3545;
+    }
+
+    .card-btn:hover {
+      opacity: 0.9;
+    }
+  </style>
 @endcomponent
