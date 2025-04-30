@@ -1,34 +1,45 @@
-version: '1'
+version: "1"
 
 services:
-    db:
-        image: mysql:8.0.30
-        hostname: db
-        environment:
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_USER: db_user
-            MYSQL_PASSWORD: db_user_pass
-        restart: always
-        ports:
-            - "6032:3306"
-        volumes:
-            - dbdata:/var/lib/mysql
-      
-    phpmyadmin:
-        image: phpmyadmin:5.2.0
-        links:
-            - db
-        environment:
-            PMA_HOST: db
-            PMA_PORT: 3306
-            PMA_ARBITRARY: 1
-        restart: always
-        ports:
-            - 8084:80
+  db:
+    image: mysql:8.0.30
+    hostname: db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: db_user_pass
+    restart: always
+    ports:
+      - "6032:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.0
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8084:80
+
+  app:
+    build:
+      context: ../code
+      dockerfile: ../docker/Dockerfile
+    container_name: db_adonis
+    restart: always
+    ports:
+      - "3333:3333"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    depends_on:
+      - db
 
 # The database will be persistent among containers restarts.
 volumes:
-    dbdata:
-
-
-  
+  dbdata:

@@ -22,8 +22,7 @@ export default class CartesController {
 
     return view.render('pages/cartes/createCard', {
       title: "Ajout d'une nouvelle carte",
-      deck, // ici, deckId est bien défini
-      // tu peux aussi passer le deck complet si besoin, par ex. deck
+      deck,
     })
   }
 
@@ -168,7 +167,7 @@ export default class CartesController {
       await card.save()
 
       session.flash({ success: 'Carte mise à jour avec succès.' })
-      return response.redirect().toRoute('deck.cards', { id: card.deckId })
+      return response.redirect().toRoute('deck.cards', { id: card.deck_id })
     } catch (err) {
       console.error(err)
       session.flash({ error: 'Erreur lors de la mise à jour de la carte.' })

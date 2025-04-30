@@ -20,7 +20,7 @@
   <script>
     function confirmDeletion() {
         if (confirm("Voulez-vous vraiment supprimer cette carte ?")) {
-            window.location.href = "{{route('card.delete', {id: card.id})}}"; // Remplace "/delete-card" par ta vraie route
+            window.location.href = "{{route('card.delete', {id: card.id})}}";
         }
     }
   </script>
