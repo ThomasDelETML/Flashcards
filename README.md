@@ -6,7 +6,11 @@
 
 Flashcards est une application permettant d'apprendre facilement avec des cartes mémoires. Cette application utilise **AdonisJS** pour le backend et **Edge** pour les templates.
 
-## Prérequis
+## Stage du projet
+
+Le projet est dans un stage de **staging**, la production na pas était réaliser.
+
+## Prérequis & outils
 
 Avant d'installer l'environnement, assurez-vous que vous avez les logiciels suivants installés :
 
@@ -19,9 +23,11 @@ Avant d'installer l'environnement, assurez-vous que vous avez les logiciels suiv
 1. **Cloner le dépôt**  
    Clonez le repository GitHub dans votre machine locale :
 
-   ```bash
+   ````bash
    git clone https://github.com/thomasdeletml/flashcards.git
-   ```
+   ```thomas@etml.comthomas@etml.com
+
+   ````
 
 2. **Accéder au dossier du projet**  
    Naviguez dans le répertoire du projet cloné :
@@ -36,7 +42,7 @@ Avant d'installer l'environnement, assurez-vous que vous avez les logiciels suiv
    ```bash
    npm install
    ```
-   
+
    **Si une erreur survient**, assurez-vous que vous avez bien la version correcte de Node.js et NPM.
 
 4. **Configuration de l'environnement**  
@@ -96,3 +102,180 @@ Après avoir lancé le serveur, ouvrez votre navigateur et allez à `http://loca
 
 Si le problème persiste, consultez la documentation officielle d'AdonisJS ou ouvrez une issue sur le repo GitHub du projet.
 
+## Dockerisation
+
+Ce guide décrit les étapes nécessaires pour dockeriser une application AdonisJS avec une base de données MySQL, les migrations, les seeds, et un accès via le navigateur.
+
+---
+
+## Prérequis
+
+- Docker et Docker Compose installés
+- Un projet AdonisJS existant (`node ace` fonctionne)
+- Une base MySQL utilisée par le projet
+- Fichier `.env` configuré
+
+---
+
+## Étape 1 : Dockerfile
+
+**`docker/Dockerfile`** :
+
+```Dockerfile
+FROM node:18
+
+WORKDIR /app
+
+COPY . .
+
+RUN npm install
+
+COPY docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+```
+
+---
+
+## Étape 2 : Script d’entrée
+
+**`docker/docker-entrypoint.sh`** :
+
+```sh
+#!/bin/sh
+set -e
+
+echo "Attente du démarrage de MySQL..."
+/app/wait-for-it.sh db:3306 --timeout=60 --strict -- echo "MySQL est prêt"
+
+echo "Exécution des migrations..."
+node ace migration:run --force
+
+echo "Exécution des seeds..."
+node ace db:seed
+
+echo "Démarrage de l'application..."
+npm run dev
+```
+
+---
+
+## Étape 3 : Script wait-for-it
+
+Télécharger et rendre exécutable :
+
+```bash
+curl -o wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+chmod +x wait-for-it.sh
+```
+
+---
+
+## Étape 4 : Fichier `docker-compose.yml`
+
+**À la racine du projet** :
+
+```yaml
+version: "3"
+
+services:
+  db:
+    image: mysql:8.0.30
+    hostname: db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: db_user_pass
+      MYSQL_DATABASE: app
+    restart: always
+    ports:
+      - "6032:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.0
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8084:80
+
+  app:
+    build:
+      context: ./code
+      dockerfile: ../docker/Dockerfile
+    container_name: db_adonis
+    restart: always
+    ports:
+      - "3333:3333"
+    volumes:
+      - ./code:/app
+      - /app/node_modules
+    depends_on:
+      - db
+
+volumes:
+  dbdata:
+```
+
+---
+
+## Étape 5 : Fichier `.env`
+
+**Dans `code/.env`**, configure AdonisJS :
+
+```env
+HOST=0.0.0.0
+PORT=3333
+
+DB_HOST=db
+DB_PORT=3306
+DB_USER=db_user
+DB_PASSWORD=db_user_pass
+DB_DATABASE=app
+```
+
+---
+
+## Étape 6 : Lancer les conteneurs
+
+Depuis la racine du projet :
+
+```bash
+docker-compose up --build
+```
+
+---
+
+## Accès à l'application
+
+- **AdonisJS App** : [http://localhost:3333](http://localhost:3333)
+- **phpMyAdmin** : [http://localhost:8084](http://localhost:8084)
+
+---
+
+## Nettoyage
+
+```bash
+docker-compose down -v
+```
+
+Cela arrête et supprime les conteneurs, réseaux et volumes.
+
+---
+
+## Vérifications
+
+- Les logs de `docker logs db_adonis` montrent que le serveur démarre.
+- `ping db` depuis le conteneur fonctionne.
+- `node ace migration:run` fonctionne à l’intérieur du conteneur.
+
+## Staging
+
+## Maintenance & modification (comment modifier des trucs)
