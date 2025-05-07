@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 services:
   db:
@@ -8,9 +8,10 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: db_user
       MYSQL_PASSWORD: db_user_pass
+      MYSQL_DATABASE: app
     restart: always
     ports:
-      - "6032:3306"
+      - '6032:3306'
     volumes:
       - dbdata:/var/lib/mysql
 
@@ -33,7 +34,7 @@ services:
     container_name: db_adonis
     restart: always
     ports:
-      - "3333:3333"
+      - '3333:3333'
     volumes:
       - ./:/app
       - /app/node_modules

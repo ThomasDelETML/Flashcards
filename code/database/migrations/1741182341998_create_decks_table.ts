@@ -8,7 +8,13 @@ export default class extends BaseSchema {
       table.increments('id') // Crée la colonne 'id'
       table.string('name', 255).notNullable() // Crée la colonne 'name'
       table.text('description').nullable() // Crée la colonne 'description'
-      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE') // Clé étrangère vers la table 'users'
+      table
+        .integer('user_id')
+        .unsigned()
+        .references('id')
+        .inTable('users')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE') // Clé étrangère vers la table 'users'
       table.timestamps() // Crée les colonnes 'created_at' et 'updated_at'
     })
   }

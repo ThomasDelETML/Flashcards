@@ -5,6 +5,7 @@ set -e
 echo "Attente du démarrage de MySQL..."
 sleep 10
 
+
 # Exécuter les migrations
 echo "Exécution des migrations..."
 node ace migration:run --force
