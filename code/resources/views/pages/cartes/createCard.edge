@@ -23,6 +23,6 @@
     </div>
 
     <button class="button" type="submit">Enregistrer</button>
-    <a href="{{ route('accueil') }}" class="button">Abandonner</a>
+    <a href="{{ route('deck.cards', { id: deck.id }) }}" class="button">Abandonner</a>
   </form>
 @endcomponent

@@ -1,12 +1,17 @@
 @component('components/layout', { title: 'Liste des Cartes' })
-  <h3>Liste des Cartes</h3>
+  <h3>
+    Liste des Cartes
+  </h3>
   <a href="{{ route('card.create') }}" class="create-card-link">Créer une nouvelle carte</a>
   <ul>
     @each(card in cards)
       <li>
         <strong>{{ card.name }}</strong>: {{ card.description }}
         <a href="{{ route('card.edit', { id: card.id }) }}">Modifier</a>
-        <a href="{{ route('card.delete', { id: card.id }) }}" onclick="return confirm('Voulez-vous vraiment supprimer cette carte ?')">Supprimer</a>
+        <a
+          href="{{ route('card.delete', { id: card.id }) }}"
+          onclick="return confirm('Voulez-vous vraiment supprimer cette carte ?')"
+        >Supprimer</a>
       </li>
     @endeach
   </ul>

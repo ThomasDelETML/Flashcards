@@ -32,8 +32,6 @@ export default class CartesController {
   public async store({ request, session, response, params }: HttpContextContract) {
     try {
       const { question, response: cardResponse } = request.only(['question', 'response'])
-
-      console.log('question:', question)
       const deckId = Number(params.id)
 
       if (isNaN(deckId)) {
@@ -47,7 +45,33 @@ export default class CartesController {
         return response.redirect().toRoute('accueil')
       }
 
-      await Carte.create({ question, response: cardResponse, deck_id: deckId })
+      // Validation
+      if (!question || question.trim().length < 10 || !cardResponse || cardResponse.trim() === '') {
+        session.flash({
+          error:
+            'La question doit contenir au moins 10 caractères et la réponse ne peut pas être vide.',
+          question,
+          response: cardResponse,
+        })
+        return response.redirect().back()
+      }
+
+      // Vérification de duplication
+      const existingCard = await Carte.query()
+        .where('deck_id', deckId)
+        .andWhere('question', question.trim())
+        .first()
+
+      if (existingCard) {
+        session.flash({ info: 'Une carte avec cette question existe déjà dans ce deck.' })
+        return response.redirect().toRoute('deck.cards', { id: deckId })
+      }
+
+      await Carte.create({
+        question: question.trim(),
+        response: cardResponse.trim(),
+        deck_id: deckId,
+      })
 
       session.flash('success', 'La nouvelle carte a été ajoutée avec succès !')
       return response.redirect().toRoute('deck.cards', { id: deckId })
@@ -95,6 +119,29 @@ export default class CartesController {
     })
   }
 
+  /**
+   * Affiche une carte spécifique
+   */
+  public async show({ params, view, session, response }: HttpContextContract) {
+    const cardId = Number(params.card_id) // Use card_id from the route
+
+    if (isNaN(cardId)) {
+      session.flash({ error: 'ID de la carte invalide.' })
+      return response.redirect().back()
+    }
+
+    const card = await Carte.find(cardId)
+    if (!card) {
+      session.flash({ error: 'Carte introuvable.' })
+      return response.redirect().back()
+    }
+
+    return view.render('pages/cartes/showCard', { card })
+  }
+
+  /**
+   * Supprime une carte
+   */
   public async delete({ params, session, response }: HttpContextContract) {
     const cardId = Number(params.id)
 
@@ -120,6 +167,9 @@ export default class CartesController {
     return response.redirect().back()
   }
 
+  /**
+   * Affiche le formulaire d’édition d’une carte
+   */
   public async edit({ params, view, session, response }: HttpContextContract) {
     const cardId = Number(params.id)
 
@@ -140,11 +190,11 @@ export default class CartesController {
     })
   }
 
+  /**
+   * Met à jour une carte existante
+   */
   public async update({ params, request, session, response }: HttpContextContract) {
     const cardId = Number(params.id)
-
-    console.log('params:', params)
-    console.log('form:', request.all())
 
     if (isNaN(cardId)) {
       session.flash({ error: 'ID de la carte invalide.' })
@@ -152,8 +202,6 @@ export default class CartesController {
     }
 
     const card = await Carte.find(cardId)
-    console.log('carte trouvée:', card)
-
     if (!card) {
       session.flash({ error: 'Carte introuvable.' })
       return response.redirect().toRoute('accueil')

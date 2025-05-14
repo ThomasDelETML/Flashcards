@@ -47,7 +47,9 @@ header {
   100% { background: rgb(255, 0, 0); }
 }*/
 
-
+.lienCarte {
+  cursor: pointer;
+}
 .container {
   flex: 1;
   width: 90%;

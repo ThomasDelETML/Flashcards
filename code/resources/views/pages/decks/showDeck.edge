@@ -18,8 +18,10 @@
     @each((card, index) in cards)
       <div class="card">
         <div class="card-content">
+          <a class="lienCarte"  href="{{ route('card.show', { id: deck.id, card_id: card.id }) }}">
           <p><strong>Question :</strong> {{ card.question }}</p>
           <p><strong>Réponse :</strong> {{ card.response }}</p>
+          </a>
         </div>
         <div class="card-actions mt-2">
           <a href="{{ route('card.edit', { id: card.id }) }}" class="card-btn edit">Modifier</a>

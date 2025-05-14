@@ -74,3 +74,8 @@ router
   .get('/deck/:id/cards', [CartesController, 'showDeckCards'])
   .as('deck.cards')
   .use(middleware.auth())
+
+router
+  .get('/deck/:id/card/:card_id', [CartesController, 'show'])
+  .as('card.show')
+  .use(middleware.auth())

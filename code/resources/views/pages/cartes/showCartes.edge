@@ -1,28 +1,28 @@
 @component('components/layout', { title: title })
-  <h3>
-    {{ title }}
-  </h3>
-  <a href="{{route('accueil')}}">< retour</a>
-  <div class="card-container" >
+  <h3>{{ title }}</h3>
+  <a href="{{ route('deck.cards', { id: card.deck_id }) }}">< retour à la liste</a>
 
-    <button onclick="confirmDeletion()" class="create-card-link mt-6">Supprimer</button>
-    <a href="{{ route('card.edit', { id: card.id }) }}" class="create-card-link mt-6">modifier</a>
-          <td>
-            {{ card.name }}
-          </td>          <br />
-          <td>
-            {{ card.description }}
-          </td>
+  <div class="card-view" style="perspective: 1000px; margin-top: 20px;">
+    <div id="card-flip" class="card" onclick="flipCard()" style="width: 300px; height: 200px; transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer; position: relative;">
+      <div class="front" style="position: absolute; width: 100%; height: 100%; backface-visibility: hidden; background: lightblue; display: flex; justify-content: center; align-items: center;">
+        <p style="font-size: 1.2em;">{{ card.question }}</p>
+      </div>
+      <div class="back" style="position: absolute; width: 100%; height: 100%; backface-visibility: hidden; background: lightgreen; display: flex; justify-content: center; align-items: center; transform: rotateY(180deg);">
+        <p style="font-size: 1.2em;">{{ card.response }}</p>
+      </div>
     </div>
-    
-    <a href="{{ route('card.create', { id: card.id }) }}" class="create-card-link mt-6">Créer une carte</a>
   </div>
+
+  <form method="get" action="{{ route('deck.cards', { id: card.deck_id }) }}" style="margin-top: 20px;">
+    <button type="submit" class="button">OK</button>
+  </form>
+
   <script>
-    function confirmDeletion() {
-        if (confirm("Voulez-vous vraiment supprimer cette carte ?")) {
-            window.location.href = "{{route('card.delete', {id: card.id})}}";
-        }
+    let flipped = false
+    function flipCard() {
+      const card = document.getElementById('card-flip')
+      flipped = !flipped
+      card.style.transform = flipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
     }
   </script>
-
 @endcomponent
