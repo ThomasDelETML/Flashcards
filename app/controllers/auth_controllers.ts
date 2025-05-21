@@ -11,7 +11,7 @@ export default class AuthController {
   }
 
   public async redirectToLogin({ response }: HttpContextContract) {
-    return response.redirect('pages/login')
+    return response.redirect('/login')
   }
 
   //Gérer la déconnexion d'un utilisateur

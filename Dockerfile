@@ -22,6 +22,8 @@ COPY . .
 # Construction de l'application en ignorant les erreurs TypeScript
 # RUN NODE_ENV=production node ace build --ignore-ts-errors
 
+RUN npm run build
+
 # Exposition du port
 EXPOSE 3333
 
