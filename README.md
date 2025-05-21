@@ -18,7 +18,7 @@ Avant d'installer l'environnement, assurez-vous que vous avez les logiciels suiv
 - **NPM** (v10.2.4 ou supérieur)
 - **Git** (téléchargeable depuis [Git officiel](https://git-scm.com/))
 
-## Installation
+# Installation
 
 1. **Cloner le dépôt**  
    Clonez le repository GitHub dans votre machine locale :
@@ -102,7 +102,7 @@ Après avoir lancé le serveur, ouvrez votre navigateur et allez à `http://loca
 
 Si le problème persiste, consultez la documentation officielle d'AdonisJS ou ouvrez une issue sur le repo GitHub du projet.
 
-## Dockerisation
+# Dockerisation
 
 Ce guide décrit les étapes nécessaires pour dockeriser une application AdonisJS avec une base de données MySQL, les migrations, les seeds, et un accès via le navigateur.
 
@@ -177,7 +177,7 @@ chmod +x wait-for-it.sh
 **À la racine du projet** :
 
 ```yaml
-version: "3"
+version: '3'
 
 services:
   db:
@@ -190,7 +190,7 @@ services:
       MYSQL_DATABASE: app
     restart: always
     ports:
-      - "6032:3306"
+      - '6032:3306'
     volumes:
       - dbdata:/var/lib/mysql
 
@@ -213,7 +213,7 @@ services:
     container_name: db_adonis
     restart: always
     ports:
-      - "3333:3333"
+      - '3333:3333'
     volumes:
       - ./code:/app
       - /app/node_modules
@@ -276,6 +276,81 @@ Cela arrête et supprime les conteneurs, réseaux et volumes.
 - `ping db` depuis le conteneur fonctionne.
 - `node ace migration:run` fonctionne à l’intérieur du conteneur.
 
-## Déploiement
+---
+
+# Déploiement du service Railway à partir du dépôt GitHub "Flashcards"
+
+## Étapes détaillées
+
+### 1. Connexion à Railway
+
+- Connectez-vous à votre compte sur [Railway.app](https://railway.app).
+
+---
+
+### 2. Ajouter un nouveau service depuis GitHub
+
+- Créez un nouveau projet/service Railway.
+- Sélectionnez l’option **"Deploy from GitHub repo"**.
+- Choisissez le dépôt **`Flashcards`**.
+- Sélectionnez la branche **`main`**.
+
+---
+
+### 3. Organisation des fichiers
+
+- Assurez-vous que tous les fichiers du projet sont placés à la racine du dépôt, c’est-à-dire au même niveau que le dossier `.git`.
+
+---
+
+### 4. Création du service MySQL
+
+- Dans Railway, ajoutez un nouveau service de base de données.
+- Choisissez **MySQL** comme moteur de base de données.
+
+---
+
+### 5. Configuration des variables d’environnement
+
+- Dans le fichier `.env.deploiement`, ajoutez les variables nécessaires pour la connexion à la base de données et pour la configuration du projet.
+
+  Par exemple :
+
+```env
+APP_KEY=
+
+HOST="0.0.0.0"
+LOG_LEVEL="info"
+
+DB_DATABASE="${{MySQL.MYSQL_DATABASE}}"
+DB_HOST="mysql.railway.internal"
+DB_PASSWORD="${{MySQL.MYSQLPASSWORD}}"
+DB_PORT="${{MySQL.MYSQLPORT}}"
+DB_USER="${{MySQL.MYSQLUSER}}"
+
+SESSION_DRIVER="cookie"
+PORT="8080"
+```
+
+- Générez une clé unique pour `APP_KEY` (exemple : une chaîne aléatoire sécurisée).
+
+---
+
+### 6. Configuration du déploiement GitHub dans Railway
+
+- Dans les paramètres du service Railway, rendez-vous dans l’onglet **Settings**.
+- Sous **Deploy**, trouvez le champ **Pre-deploy Command**.
+- Ajoutez la commande suivante :
+
+  node ace migration:fresh --seed --force
+
+  Cette commande permet de lancer les migrations et d’initialiser la base de données avec des données de test à chaque déploiement.
+
+---
+
+### 7. Génération du domaine public
+
+- Toujours dans Railway, ouvrez l’onglet **Networking**.
+- Cliquez sur **Generate Domain** pour obtenir une URL publique accessible.
 
 ## Maintenance & modification (comment modifier des trucs)
