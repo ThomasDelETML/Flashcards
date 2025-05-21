@@ -1,4 +1,4 @@
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import type { HttpContext } from '@adonisjs/core/http'
 import Deck from '#models/deck'
 import Carte from '#models/carte'
 
@@ -6,7 +6,7 @@ export default class CartesController {
   /**
    * Affiche la page de création d'une carte pour un deck donné
    */
-  public async create({ view, params, session, response }: HttpContextContract) {
+  public async create({ view, params, session, response }: HttpContext) {
     const deckId = Number(params.id)
 
     if (isNaN(deckId)) {
@@ -29,7 +29,7 @@ export default class CartesController {
   /**
    * Enregistre une nouvelle carte dans un deck existant
    */
-  public async store({ request, session, response, params }: HttpContextContract) {
+  public async store({ request, session, response, params }: HttpContext) {
     try {
       const { question, response: cardResponse } = request.only(['question', 'response'])
       const deckId = Number(params.id)
@@ -88,7 +88,7 @@ export default class CartesController {
   /**
    * Affiche toutes les cartes (pour admin ou debug par exemple)
    */
-  public async index({ view }: HttpContextContract) {
+  public async index({ view }: HttpContext) {
     const cards = await Carte.all()
     return view.render('pages/cartes/index', { cards })
   }
@@ -96,7 +96,7 @@ export default class CartesController {
   /**
    * Affiche toutes les cartes d’un deck spécifique
    */
-  public async showDeckCards({ params, view, session, response }: HttpContextContract) {
+  public async showDeckCards({ params, view, session, response }: HttpContext) {
     const deckId = Number(params.id)
 
     if (isNaN(deckId)) {
@@ -122,7 +122,7 @@ export default class CartesController {
   /**
    * Affiche une carte spécifique
    */
-  public async show({ params, view, session, response }: HttpContextContract) {
+  public async show({ params, view, session, response }: HttpContext) {
     const cardId = Number(params.card_id) // Use card_id from the route
 
     if (isNaN(cardId)) {
@@ -142,7 +142,7 @@ export default class CartesController {
   /**
    * Supprime une carte
    */
-  public async delete({ params, session, response }: HttpContextContract) {
+  public async delete({ params, session, response }: HttpContext) {
     const cardId = Number(params.id)
 
     if (isNaN(cardId)) {
@@ -170,7 +170,7 @@ export default class CartesController {
   /**
    * Affiche le formulaire d’édition d’une carte
    */
-  public async edit({ params, view, session, response }: HttpContextContract) {
+  public async edit({ params, view, session, response }: HttpContext) {
     const cardId = Number(params.id)
 
     if (isNaN(cardId)) {
@@ -193,7 +193,7 @@ export default class CartesController {
   /**
    * Met à jour une carte existante
    */
-  public async update({ params, request, session, response }: HttpContextContract) {
+  public async update({ params, request, session, response }: HttpContext) {
     const cardId = Number(params.id)
 
     if (isNaN(cardId)) {

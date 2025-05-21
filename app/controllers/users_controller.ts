@@ -1,6 +1,6 @@
 // import type { HttpContext } from '@adonisjs/core/http'
 
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
 import { UserValidator } from '#validators/user'
 import { loginUserValidator } from '#validators/loginuser'
@@ -8,11 +8,11 @@ import { dd } from '@adonisjs/core/services/dumper'
 import hash from '@adonisjs/core/services/hash'
 
 export default class UsersController {
-  public async register({ request, session, response }: HttpContextContract) {
+  public async register({ request, session, response }: HttpContext) {
     //const data = request.only(['full_name', 'email', 'password'])
     try {
       const payload = await request.validateUsing(UserValidator)
-      const user = await User.create({
+      await User.create({
         full_name: payload.full_name,
         email: payload.email,
         password: payload.password,
@@ -44,7 +44,7 @@ export default class UsersController {
       
     }*/
   }
-  public async login({ request, session, response, auth }: HttpContextContract) {
+  public async login({ request, session, response, auth }: HttpContext) {
     //dd(request.all())
     try {
       const payload = await request.validateUsing(loginUserValidator)
@@ -74,7 +74,7 @@ export default class UsersController {
     }
   }
 
-  public async getUsers({ response }: HttpContextContract) {
+  public async getUsers({ response }: HttpContext) {
     const users = await User.all()
     return response.ok(users)
   }
