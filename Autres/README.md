@@ -276,6 +276,6 @@ Cela arrête et supprime les conteneurs, réseaux et volumes.
 - `ping db` depuis le conteneur fonctionne.
 - `node ace migration:run` fonctionne à l’intérieur du conteneur.
 
-## Staging
+## Déploiement
 
 ## Maintenance & modification (comment modifier des trucs)
