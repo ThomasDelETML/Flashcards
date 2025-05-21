@@ -53,13 +53,13 @@ export default class UsersController {
 
       if (!user) {
         session.flash({ error: 'votre mot de passe ou votre mail est incorect' })
-        return response.redirect.toRoute('getlogin')
+        return response.redirect().toRoute('getlogin')
       }
 
       const passwordValid = await hash.verify(user.password, payload.password)
       if (!passwordValid) {
         session.flash({ errors: [{ message: "L'email ou le mot de passe est incorrect." }] })
-        return response.redirect.toRoute('getlogin')
+        return response.redirect().toRoute('getlogin')
       }
 
       await session.put('id', user.id)
@@ -70,7 +70,7 @@ export default class UsersController {
     } catch (error) {
       dd(error)
       session.flash({ error: 'erreur' })
-      return response.redirect.toRoute('getlogin')
+      return response.redirect().toRoute('getlogin')
     }
   }
 

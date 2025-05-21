@@ -2,17 +2,22 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { deckValidator } from '#validators/deck'
 import Deck from '#models/deck'
 import Carte from '#models/carte'
+
 export default class AccueilsController {
   /**
    * Display a list of resource
    */
+  public async accueil({ view, auth, response }: HttpContext) {
+    if (!auth.user) {
+      return response.redirect().toRoute('login')
+    }
 
-  public async accueil({ view, auth }: HttpContext) {
     const userId = auth.user.id
     const decks = await Deck.query().where('user_id', userId).orderBy('name', 'asc')
 
     return view.render('pages/home', { decks })
   }
+
   /**
    * Display form to create a new record
    */
@@ -27,9 +32,13 @@ export default class AccueilsController {
    * Handle form submission for the create action
    */
   public async store({ request, session, response, auth }: HttpContext) {
+    if (!auth.user) {
+      session.flash('error', 'Vous devez être connecté pour créer un deck')
+      return response.redirect().toRoute('login')
+    }
+
     try {
       const { name, description } = await request.validateUsing(deckValidator)
-
       const user_id = auth.user.id
 
       await Deck.create({ name, description, user_id })
@@ -38,7 +47,7 @@ export default class AccueilsController {
     } catch (err) {
       session.flash({
         error:
-          "il faut que le nom du deck n'existe pas deja et que la description fasse 10 caractères !",
+          "Il faut que le nom du deck n'existe pas déjà et que la description fasse 10 caractères !",
       })
       return response.redirect().toRoute('accueil')
     }
@@ -96,11 +105,4 @@ export default class AccueilsController {
     session.flash('success', 'le deck a été mis a jour !')
     return response.redirect().toRoute('accueil')
   }
-  /**
-   * Handle form submission for the edit action
-   */
-
-  /**
-   * Delete record
-   */
 }
