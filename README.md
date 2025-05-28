@@ -18,6 +18,14 @@ Avant d'installer l'environnement, assurez-vous que vous avez les logiciels suiv
 - **NPM** (v10.2.4 ou supérieur)
 - **Git** (téléchargeable depuis [Git officiel](https://git-scm.com/))
 
+### DBeaver peut s'avérer utile.
+
+Pour connecter Dbeaver à la db, créer une nouvelle connection (Ctrl+Shift+N), puis sélectionner Mysql, ensuite remplir les paramètres suivants:
+server host: localhost
+Port: 6032
+Username: root
+Password: root
+
 # Installation
 
 1. **Cloner le dépôt**  
@@ -102,8 +110,7 @@ Après avoir lancé le serveur, ouvrez votre navigateur et allez à `http://loca
 Si le problème persiste, consultez la documentation officielle d'AdonisJS ou ouvrez une issue sur le repo GitHub du projet.
 
 ## Schéma 
-![image](https://github.com/user-attachments/assets/af451931-d5d7-4b8f-9ff4-0d6c993ad1de)
-
+![image](https://github.com/user-attachments/assets/3cad0384-981b-4b24-8919-97937b4c9ce6)
 
 ---
 
@@ -282,7 +289,7 @@ Cela arrête et supprime les conteneurs, réseaux et volumes.
 - `ping db` depuis le conteneur fonctionne.
 - `node ace migration:run` fonctionne à l’intérieur du conteneur.
 
-![image](https://github.com/user-attachments/assets/99dedf2d-d2a2-4ddf-9e4e-ad3b09b46f66)
+![image](https://github.com/user-attachments/assets/f781d381-a3fd-405c-b1a8-e5b2d4269afd)
 #### Même que le Dev car l'architecture est la même.
 ---
 
@@ -361,7 +368,7 @@ PORT="8080"
 - Toujours dans Railway, ouvrez l’onglet **Networking**.
 - Cliquez sur **Generate Domain** pour obtenir une URL publique accessible.
 
-![image](https://github.com/user-attachments/assets/8f1ffd00-265f-477a-a5bd-d8ef6841c1ee)
+![image](https://github.com/user-attachments/assets/ef973b01-247b-4c2a-bea8-56165af064d5)
 
 ---
 
@@ -766,4 +773,5 @@ mysqldump -h staging-db -u staging_user -p flashcards_staging > staging-backup-$
 
 Cette configuration de staging assure une validation complète avant le passage en production et maintient la qualité de l'application Flashcards.
 
-![image](https://github.com/user-attachments/assets/49135446-4e02-44b3-82e9-d77f24b4008d)
+![image](https://github.com/user-attachments/assets/8932ad4e-06d8-42eb-9888-c5e52a7f520f)
+
