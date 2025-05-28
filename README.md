@@ -8,7 +8,7 @@ Flashcards est une application permettant d'apprendre facilement avec des cartes
 
 ## Stage du projet
 
-Le projet est dans un stage de **staging**, la production na pas était réaliser.
+Le projet à était déployer, le staging na pas était réaliser.
 
 ## Prérequis & outils
 
@@ -18,14 +18,13 @@ Avant d'installer l'environnement, assurez-vous que vous avez les logiciels suiv
 - **NPM** (v10.2.4 ou supérieur)
 - **Git** (téléchargeable depuis [Git officiel](https://git-scm.com/))
 
-## Installation
+# Installation
 
 1. **Cloner le dépôt**  
    Clonez le repository GitHub dans votre machine locale :
 
    ````bash
    git clone https://github.com/thomasdeletml/flashcards.git
-   ```thomas@etml.comthomas@etml.com
 
    ````
 
@@ -102,7 +101,13 @@ Après avoir lancé le serveur, ouvrez votre navigateur et allez à `http://loca
 
 Si le problème persiste, consultez la documentation officielle d'AdonisJS ou ouvrez une issue sur le repo GitHub du projet.
 
-## Dockerisation
+## Schéma 
+![image](https://github.com/user-attachments/assets/af451931-d5d7-4b8f-9ff4-0d6c993ad1de)
+
+
+---
+
+# Dockerisation
 
 Ce guide décrit les étapes nécessaires pour dockeriser une application AdonisJS avec une base de données MySQL, les migrations, les seeds, et un accès via le navigateur.
 
@@ -114,6 +119,7 @@ Ce guide décrit les étapes nécessaires pour dockeriser une application Adonis
 - Un projet AdonisJS existant (`node ace` fonctionne)
 - Une base MySQL utilisée par le projet
 - Fichier `.env` configuré
+- Etre sur la branche 'Docker' du projet
 
 ---
 
@@ -177,7 +183,7 @@ chmod +x wait-for-it.sh
 **À la racine du projet** :
 
 ```yaml
-version: "3"
+version: '3'
 
 services:
   db:
@@ -190,7 +196,7 @@ services:
       MYSQL_DATABASE: app
     restart: always
     ports:
-      - "6032:3306"
+      - '6032:3306'
     volumes:
       - dbdata:/var/lib/mysql
 
@@ -213,7 +219,7 @@ services:
     container_name: db_adonis
     restart: always
     ports:
-      - "3333:3333"
+      - '3333:3333'
     volumes:
       - ./code:/app
       - /app/node_modules
@@ -276,6 +282,488 @@ Cela arrête et supprime les conteneurs, réseaux et volumes.
 - `ping db` depuis le conteneur fonctionne.
 - `node ace migration:run` fonctionne à l’intérieur du conteneur.
 
-## Déploiement
+![image](https://github.com/user-attachments/assets/99dedf2d-d2a2-4ddf-9e4e-ad3b09b46f66)
+#### Même que le Dev car l'architecture est la même.
+---
 
-## Maintenance & modification (comment modifier des trucs)
+# Déploiement du service Railway à partir du dépôt GitHub "Flashcards"
+
+## Étapes détaillées
+
+### 1. Connexion à Railway
+
+- Connectez-vous à votre compte sur [Railway.app](https://railway.app).
+
+---
+
+### 2. Ajouter un nouveau service depuis GitHub
+
+- Créez un nouveau projet/service Railway.
+- Sélectionnez l’option **"Deploy from GitHub repo"**.
+- Choisissez le dépôt **`Flashcards`**.
+- Sélectionnez la branche **`main`**.
+
+---
+
+### 3. Organisation des fichiers
+
+- Assurez-vous que tous les fichiers du projet sont placés à la racine du dépôt, c’est-à-dire au même niveau que le dossier `.git`.
+
+---
+
+### 4. Création du service MySQL
+
+- Dans Railway, ajoutez un nouveau service de base de données.
+- Choisissez **MySQL** comme moteur de base de données.
+
+---
+
+### 5. Configuration des variables d’environnement
+
+- Dans le fichier `.env.deploiement`, ajoutez les variables nécessaires pour la connexion à la base de données et pour la configuration du projet.
+
+  Par exemple :
+
+```env
+APP_KEY=
+
+HOST="0.0.0.0"
+LOG_LEVEL="info"
+
+DB_DATABASE="${{MySQL.MYSQL_DATABASE}}"
+DB_HOST="mysql.railway.internal"
+DB_PASSWORD="${{MySQL.MYSQLPASSWORD}}"
+DB_PORT="${{MySQL.MYSQLPORT}}"
+DB_USER="${{MySQL.MYSQLUSER}}"
+
+SESSION_DRIVER="cookie"
+PORT="8080"
+```
+
+- Générez une clé unique pour `APP_KEY` (exemple : une chaîne aléatoire sécurisée).
+
+---
+
+### 6. Configuration du déploiement GitHub dans Railway
+
+- Dans les paramètres du service Railway, rendez-vous dans l’onglet **Settings**.
+- Sous **Deploy**, trouvez le champ **Pre-deploy Command**.
+- Ajoutez la commande suivante :
+
+  node ace migration:fresh --seed --force
+
+  Cette commande permet de lancer les migrations et d’initialiser la base de données avec des données de test à chaque déploiement.
+
+---
+
+### 7. Génération du domaine public
+
+- Toujours dans Railway, ouvrez l’onglet **Networking**.
+- Cliquez sur **Generate Domain** pour obtenir une URL publique accessible.
+
+![image](https://github.com/user-attachments/assets/8f1ffd00-265f-477a-a5bd-d8ef6841c1ee)
+
+---
+
+# Staging
+### Je n'ai pas fait la partie staging mais voilà ce que j'aurais fais:
+
+Le staging est un environnement intermédiaire entre le développement et la production qui permet de tester l'application dans des conditions similaires à la production avant le déploiement final.
+
+---
+
+## Objectifs du staging
+
+- **Validation finale** : Tester toutes les fonctionnalités dans un environnement proche de la production
+- **Tests d'intégration** : Vérifier que tous les composants fonctionnent ensemble
+- **Tests de performance** : Mesurer les performances sous charge
+- **Validation des migrations** : S'assurer que les migrations de base de données fonctionnent correctement
+- **Tests utilisateur** : Permettre aux testeurs de valider l'interface et l'expérience utilisateur
+
+---
+
+## Architecture de staging
+
+### Structure des environnements
+
+```
+├── Development (local)
+├── Staging (test)        ← Nous sommes ici
+└── Production (live)
+```
+
+### Configuration staging
+
+**Variables d'environnement pour staging (.env.staging)** :
+
+```env
+# Application
+APP_KEY=your-staging-app-key-here
+NODE_ENV=staging
+HOST=0.0.0.0
+PORT=3333
+LOG_LEVEL=debug
+
+# Base de données de staging
+DB_HOST=staging-db-host
+DB_PORT=3306
+DB_USER=staging_user
+DB_PASSWORD=staging_secure_password
+DB_DATABASE=flashcards_staging
+
+# Sessions et sécurité
+SESSION_DRIVER=cookie
+```
+
+---
+
+## Déploiement sur Railway (Staging)
+
+### 1. Création du service staging
+
+```bash
+# Créer une nouvelle branche staging
+git checkout -b staging
+git push origin staging
+```
+
+### 2. Configuration Railway pour staging
+
+- Créez un nouveau projet Railway nommé `flashcards-staging`
+- Déployez depuis la branche `staging`
+- Configurez les variables d'environnement staging
+
+### 3. Base de données staging séparée
+
+```bash
+# Créer un service MySQL dédié au staging
+# Variables à configurer dans Railway :
+MYSQL_DATABASE=flashcards_staging
+MYSQL_USER=staging_user
+MYSQL_PASSWORD=secure_staging_password
+```
+
+### 4. Scripts de déploiement staging
+
+**package.json** - Ajouter les scripts suivants :
+
+```json
+{
+  "scripts": {
+    "staging:build": "npm run build",
+    "staging:migrate": "node ace migration:run --force",
+    "staging:seed": "node ace db:seed --force",
+    "staging:deploy": "npm run staging:migrate && npm run staging:seed && npm start",
+    "staging:rollback": "node ace migration:rollback --force",
+    "staging:reset": "node ace migration:fresh --seed --force"
+  }
+}
+```
+
+---
+
+## Tests automatisés en staging
+
+### 1. Tests d'intégration
+
+Créer un fichier `tests/staging/integration.spec.ts` :
+
+```typescript
+import { test } from '@japa/runner'
+import { BaseSeeder } from '@adonisjs/lucid/seeders'
+
+test.group('Staging Integration Tests', () => {
+  test('should connect to staging database', async ({ assert }) => {
+    // Test de connexion à la base de données
+    const Database = (await import('@adonisjs/lucid/database')).default
+    const connection = await Database.connection()
+    assert.isTrue(connection.isConnected)
+  })
+
+  test('should run migrations successfully', async ({ assert }) => {
+    // Test des migrations
+    const { default: Migrator } = await import('@adonisjs/lucid/migrator')
+    const migrator = new Migrator(Database, Application, {
+      direction: 'up',
+      dryRun: false,
+    })
+    await migrator.run()
+    assert.isTrue(migrator.status === 'completed')
+  })
+
+  test('should seed data successfully', async ({ assert }) => {
+    // Test des seeders
+    // Vérifier que les données de test sont bien créées
+    const User = (await import('#models/user')).default
+    const users = await User.all()
+    assert.isTrue(users.length > 0)
+  })
+})
+```
+
+### 2. Tests de performance
+
+```typescript
+test.group('Performance Tests', () => {
+  test('should handle multiple concurrent users', async ({ assert }) => {
+    // Simuler 100 requêtes simultanées
+    const promises = Array(100).fill(null).map(() => 
+      fetch('https://flashcards-staging.yourdomain.com/api/health')
+    )
+    
+    const results = await Promise.all(promises)
+    const successfulRequests = results.filter(r => r.status === 200)
+    
+    assert.isTrue(successfulRequests.length >= 95) // 95% de succès minimum
+  })
+})
+```
+
+---
+
+## Processus de validation staging
+
+### 1. Checklist de déploiement
+
+- [ ] **Code review** terminé et approuvé
+- [ ] **Tests unitaires** passent (100%)
+- [ ] **Tests d'intégration** passent
+- [ ] **Migrations** testées et validées
+- [ ] **Variables d'environnement** configurées
+- [ ] **Base de données staging** opérationnelle
+- [ ] **Monitoring** et logs activés
+
+### 2. Tests fonctionnels
+
+#### Tests utilisateur
+- [ ] Inscription/Connexion utilisateur
+- [ ] Création de flashcards
+- [ ] Modification de flashcards
+- [ ] Suppression de flashcards
+- [ ] Navigation entre les cartes
+- [ ] Système de révision
+- [ ] Sauvegarde des progrès
+
+#### Tests de sécurité
+- [ ] Authentification
+- [ ] Autorisation
+- [ ] Protection CSRF
+- [ ] Validation des données
+- [ ] Sécurité des sessions
+
+### 3. Tests de charge
+
+```bash
+# Utilisation d'Artillery pour les tests de charge
+npm install -g artillery
+
+# Créer artillery-staging.yml
+artillery run artillery-staging.yml
+```
+
+**artillery-staging.yml** :
+
+```yaml
+config:
+  target: 'https://flashcards-staging.yourdomain.com'
+  phases:
+    - duration: 60
+      arrivalRate: 10
+    - duration: 120
+      arrivalRate: 50
+  defaults:
+    headers:
+      Content-Type: 'application/json'
+
+scenarios:
+  - name: "Load test flashcards"
+    requests:
+      - get:
+          url: "/"
+      - get:
+          url: "/flashcards"
+      - post:
+          url: "/api/flashcards"
+          json:
+            title: "Test Card"
+            front: "Question"
+            back: "Answer"
+```
+
+---
+
+## Monitoring et observabilité
+
+### 1. Logs structurés
+
+```typescript
+// config/logger.ts - Configuration pour staging
+import { defineConfig } from '@adonisjs/logger'
+
+export default defineConfig({
+  default: 'app',
+  loggers: {
+    app: {
+      enabled: true,
+      name: 'flashcards-staging',
+      level: 'debug',
+      transport: {
+        targets: [
+          {
+            target: 'pino-pretty',
+            level: 'info',
+            options: {
+              colorize: true
+            }
+          },
+          {
+            target: 'pino/file',
+            level: 'error',
+            options: {
+              destination: './storage/logs/staging-errors.log'
+            }
+          }
+        ]
+      }
+    }
+  }
+})
+```
+
+### 2. Health checks
+
+```typescript
+// app/controllers/health_controller.ts
+export default class HealthController {
+  async check({ response }: HttpContext) {
+    const health = {
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      environment: 'staging',
+      database: await this.checkDatabase(),
+      memory: process.memoryUsage(),
+      uptime: process.uptime()
+    }
+    
+    return response.ok(health)
+  }
+  
+  private async checkDatabase() {
+    try {
+      await Database.rawQuery('SELECT 1')
+      return { status: 'connected' }
+    } catch (error) {
+      return { status: 'error', message: error.message }
+    }
+  }
+}
+```
+
+---
+
+## Processus de promotion vers production
+
+### 1. Critères de validation
+
+Pour qu'une version puisse passer en production :
+
+- ✅ **Tous les tests automatisés** passent
+- ✅ **Tests de performance** satisfaisants (< 2s temps de réponse)
+- ✅ **Tests de sécurité** validés
+- ✅ **Tests utilisateur** approuvés par l'équipe
+- ✅ **Pas d'erreurs critiques** en staging pendant 48h minimum
+- ✅ **Documentation** mise à jour
+- ✅ **Plan de rollback** préparé
+
+### 2. Workflow de promotion
+
+```bash
+# 1. Finaliser les tests en staging
+npm run test:staging:full
+
+# 2. Créer une release candidate
+git checkout main
+git merge staging
+git tag -a v1.0.0-rc.1 -m "Release candidate 1.0.0"
+
+# 3. Déployer en production (après validation)
+git checkout production
+git merge main
+git tag -a v1.0.0 -m "Production release 1.0.0"
+```
+
+### 3. Documentation de release
+
+```markdown
+## Release Notes v1.0.0
+
+### Nouvelles fonctionnalités
+- Système de flashcards avec révision espacée
+- Interface utilisateur responsive
+- Authentification sécurisée
+
+### Corrections
+- Fix validation des formulaires
+- Amélioration des performances de base de données
+
+### Améliorations
+- Optimisation du chargement des cartes
+- Amélioration de l'UX mobile
+
+### Tests validés
+- Tests unitaires : 100% (150 tests)
+- Tests d'intégration : ✅ (25 tests)
+- Tests de performance : ✅ (< 1.5s temps de réponse)
+- Tests de sécurité : ✅ Aucune vulnérabilité critique
+
+### Instructions de déploiement
+1. Effectuer la sauvegarde de la base de données production
+2. Exécuter les migrations : `node ace migration:run --force`
+3. Déployer le code
+4. Vérifier les health checks
+5. Activer le monitoring
+```
+
+---
+
+## Outils et commandes utiles
+
+### Scripts de gestion staging
+
+```bash
+#!/bin/bash
+# staging-deploy.sh
+
+echo "Déploiement en staging..."
+
+# Vérifications préalables
+npm run test
+npm run lint
+
+# Build et déploiement
+npm run build
+git push origin staging
+
+echo "Déploiement staging terminé"
+echo "URL: https://flashcards-staging.yourdomain.com"
+echo "Monitoring: https://railway.app/project/flashcards-staging"
+```
+
+### Nettoyage et maintenance
+
+```bash
+# Nettoyage des logs anciens
+find ./storage/logs -name "*.log" -mtime +7 -delete
+
+# Reset complet de l'environnement staging
+npm run staging:reset
+
+# Sauvegarde de la base de données staging
+mysqldump -h staging-db -u staging_user -p flashcards_staging > staging-backup-$(date +%Y%m%d).sql
+```
+
+---
+
+Cette configuration de staging assure une validation complète avant le passage en production et maintient la qualité de l'application Flashcards.
+
+![image](https://github.com/user-attachments/assets/49135446-4e02-44b3-82e9-d77f24b4008d)
