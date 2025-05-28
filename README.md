@@ -554,7 +554,7 @@ test.group('Performance Tests', () => {
 #### Tests de sécurité
 - [ ] Authentification
 - [ ] Autorisation
-- [ ] Protection CSRF
+- [ ] Protection CSRF (Pas vraiment besoins dans la cadre de ce projet mais une bonne pratique, apprit dans le cours i183 de Mr. Schaffter)
 - [ ] Validation des données
 - [ ] Sécurité des sessions
 
